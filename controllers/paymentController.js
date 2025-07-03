@@ -1,6 +1,5 @@
-// server/controllers/paymentController.ts
 import Stripe from 'stripe';
-const stripe = new Stripe(process.env.STRIPE_SECRET, { apiVersion: '2025-06-30.basil' });
+const stripe = new Stripe('sk_test_51Rg5ltDIIYgFqdpwfKMXbJDKhliozY1elXhqSRyBqP2K8ReuJ4eFrOoRuVbCuPNUR0Q1B7DXkj7U08K6npnb7tlG00i4qLf8CU', { apiVersion: '2025-06-30.basil' });
 
 const createPaymentIntent = async (req, res) => {
   try {
