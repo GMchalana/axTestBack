@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
-const BookingsSchema = new mongoose.Schema({
+const OrderItemsSchema = new mongoose.Schema({
+  order: { type: mongoose.Schema.Types.ObjectId, ref: 'Order', required: true },
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   hotel: { type: mongoose.Schema.Types.ObjectId, ref: 'Hotel', required: true },
   date: { type: Date, required: true }, // Changed from String to Date
@@ -12,7 +13,7 @@ const BookingsSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 // Automatically calculate expiresAt before saving
-BookingsSchema.pre('save', function(next) {
+OrderItemsSchema.pre('save', function(next) {
   if (this.isModified('date') || this.isModified('duration')) {
     const bookingDate = new Date(this.date);
     this.expiresAt = new Date(bookingDate.getTime() + this.duration * 60000);
@@ -20,5 +21,5 @@ BookingsSchema.pre('save', function(next) {
   next();
 });
 
-const Bookings = mongoose.model('Bookings', BookingsSchema);
-export default Bookings;
+const OrderItems = mongoose.model('OrderItems', OrderItemsSchema);
+export default OrderItems;

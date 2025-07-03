@@ -24,7 +24,7 @@ const placeBooking = async (req, res) => {
 const cancelBooking = async (req, res) => {
   try {
     const bookingId = req.body.id;
-    console.log('Booking ID:', bookingId);
+    // console.log('Booking ID:', bookingId);
     const booking = await Bookings.findByIdAndDelete(bookingId);
 
     if (!booking) {
@@ -49,7 +49,7 @@ const cancelBooking = async (req, res) => {
 const getAllBookingHotels = async (req, res) => {
   try {
     const bookings = await Bookings.find()
-      .select('date time duration hotel')
+      .select('date time duration hotel  amount isCheckout')
       .populate({
         path: 'hotel',
         select: '_id hotelCode sabreHotelCode codeContext name chainName brandName description primaryImage'

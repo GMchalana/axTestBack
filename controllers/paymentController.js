@@ -3,10 +3,15 @@ const stripe = new Stripe('sk_test_51Rg5ltDIIYgFqdpwfKMXbJDKhliozY1elXhqSRyBqP2K
 
 const createPaymentIntent = async (req, res) => {
   try {
-    const { amount } = req.body;
+    let { amount } = req.body;
+    amount = parseInt(amount, 10);
+
+    if (isNaN(amount) || amount <= 0) {
+      return res.status(400).send({ error: 'Invalid amount' });
+    }
 
     const paymentIntent = await stripe.paymentIntents.create({
-      amount, // in cents (e.g., 1000 = $10)
+      amount,
       currency: 'usd',
       automatic_payment_methods: { enabled: true },
     });
@@ -19,5 +24,6 @@ const createPaymentIntent = async (req, res) => {
     res.status(500).send({ error: 'Payment failed' });
   }
 };
+//
 
 export default createPaymentIntent;

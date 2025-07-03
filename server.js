@@ -3,7 +3,10 @@ import db from './config/db.js';
 import userRouter from './routes/user.js';
 import hotelRouter from './routes/hotels.js';
 import bookingRouter from './routes/booking.js';
+import orderRouter from './routes/order.js';
 import cors from 'cors';
+import createIndexes from './scripts/createIndexes.js';
+import mongoose from 'mongoose';
 
 const app = express();
 app.use(cors());
@@ -17,12 +20,22 @@ db();
 app.use('/api/user', userRouter);
 app.use('/api/hotels', hotelRouter);
 app.use('/api/bookings', bookingRouter);
+app.use('/api/orders', orderRouter);
 
 // Test route to check if the API is running
 app.get('/test', (req, res) => {
   res.send('API is running');
 });
 
+
+mongoose.connection.once('open', async () => {
+  try {
+    await createIndexes();
+    console.log('Database indexes created successfully');
+  } catch (error) {
+    console.error('Error creating indexes:', error);
+  }
+});
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
