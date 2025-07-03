@@ -7,26 +7,26 @@ class BookingStatusUpdater {
     const now = new Date();
     
     try {
-      // Start a MongoDB session for transactions
+     
       const session = await mongoose.startSession();
       session.startTransaction();
       
       try {
-        // 1. Update expired bookings
+      
         await Bookings.updateMany(
           { expiresAt: { $lte: now }, isCheckout: false },
           { $set: { isCheckout: true } },
           { session }
         );
         
-        // 2. Update expired order items
+       
         await OrderItems.updateMany(
           { expiresAt: { $lte: now }, isCheckout: false },
           { $set: { isCheckout: true } },
           { session }
         );
         
-        // 3. Get all hotels with active bookings/orders
+
         const activeBookingHotelIds = await Bookings.distinct('hotel', 
           { isCheckout: false }, 
           { session }
@@ -37,10 +37,10 @@ class BookingStatusUpdater {
           { session }
         );
         
-        // Combine and deduplicate hotel IDs
+        
         const allActiveHotelIds = [...new Set([...activeBookingHotelIds, ...activeOrderHotelIds])];
         
-        // 4. Update hotel statuses
+        
         await Hotel.updateMany(
           { _id: { $in: allActiveHotelIds } },
           { $set: { isBooked: true } },
@@ -53,11 +53,11 @@ class BookingStatusUpdater {
           { session }
         );
         
-        // Commit the transaction
+    
         await session.commitTransaction();
         console.log(`Booking status update completed at ${now}`);
       } catch (error) {
-        // If any error occurs, abort the transaction
+       
         await session.abortTransaction();
         throw error;
       } finally {

@@ -54,7 +54,8 @@ const getUserOrders = async (req, res) => {
     const ordersWithItems = await Promise.all(
       orders.map(async (order) => {
         const items = await OrderItems.find({ order: order._id })
-          .populate('hotel', 'name'); 
+          .populate('hotel', 'name')
+          .populate('hotel', 'primaryImage'); 
         return { order, items };
       })
     );

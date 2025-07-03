@@ -14,15 +14,15 @@ const PORT =  process.env.PORT || 4000;
 
 app.use(express.json());
 
-//Initialize the database connection
-db();
+//start DB
+await db();
 
 app.use('/api/user', userRouter);
 app.use('/api/hotels', hotelRouter);
 app.use('/api/bookings', bookingRouter);
 app.use('/api/orders', orderRouter);
 
-// Test route to check if the API is running
+// test route
 app.get('/test', (req, res) => {
   res.send('API is running');
 });
